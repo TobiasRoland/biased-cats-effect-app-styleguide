@@ -2,9 +2,9 @@
 
 ## Overview
 
-This guide establishes patterns for JSON codec implementation in Scala using Circe.
-The approach prioritizes API stability and explicit contracts over the initial perceived convenience of automatic
-derivation. Handrolling an encoder/decoder takes a minute longer, but ensures that the JSON structure is
+This guide establishes patterns for JSON codec implementation in Scala using Circe, prioritizing long-term
+maintainability; API stability and explicit contracts over the initial perceived convenience of automatic
+derivation. Handrolling encoders/decoders don't take many seconds, but ensures that the JSON structure is
 predictable and stable.
 
 Circe plays most other libraries, and even in projects without "typelevel" stack dependencies, I recommend it as the
@@ -36,16 +36,22 @@ via the circe Encoder and Decoder.
 Assuming `V.circe` is the version of circe:
 
 ```
+    // ✅ recommended baseline dependencies
     "io.circe" %% "circe-core"    % V.circe,
     "io.circe" %% "circe-literal" % V.circe,
     "io.circe" %% "circe-parser"  % V.circe,
+    
+    // 🚫 avoid both -generic and -semiauto dependencies
+    "io.circe" %% "circe-generic"        % V.circe,
+    "io.circe" %% "circe-generic-extras" % V.circe,
+    "io.circe" %% "circe-semiauto"       % V.circe,
 ```
 
 ## Standard Imports
 
 Always use wildcard imports to ensure all necessary implicits are in scope:
 
-```scala
+```scala 3
 import io.circe.*
 import io.circe.syntax.*
 // if constructing hardcoded JSON:
@@ -54,7 +60,7 @@ import io.circe.literal.*
 
 **Never import:**
 
-```scala
+```scala 3
 // 🚫 Auto-derivation (forbidden)
 import io.circe.generic.auto.*
 import io.circe.semiauto.*
@@ -68,7 +74,7 @@ import io.circe.Decoder
 
 **Template:**
 
-```scala
+```scala 3
 object ModelName {
   given modelNameEncoder: Encoder[ModelName] = x => Json.obj(
     "jsonKey1" := x.field1,
@@ -88,7 +94,7 @@ object ModelName {
 
 **Single field:**
 
-```scala
+```scala 3
 final case class Owner(address: String)
 
 object Owner {
@@ -116,7 +122,7 @@ object Pet {
 
 **Single argument template:**
 
-```scala
+```scala 3
 object ModelName {
   given modelNameDecoder: Decoder[ModelName] =
     _.downField("jsonKey").as[FieldType].map(ModelName.apply)
@@ -125,7 +131,7 @@ object ModelName {
 
 **Multiple arguments template:**
 
-```scala
+```scala 3
 object ModelName {
   given modelNameDecoder: Decoder[ModelName] = c => for {
     field1 <- c.downField("jsonKey1").as[FieldType1]
@@ -148,7 +154,7 @@ object ModelName {
 
 **Single field:**
 
-```scala
+```scala 3
 object Owner {
   given ownerDecoder: Decoder[Owner] =
     _.downField("address").as[String].map(Owner.apply)
@@ -157,7 +163,7 @@ object Owner {
 
 **Multiple fields:**
 
-```scala
+```scala 3
 object Pet {
   given petDecoder: Decoder[Pet] = c => for {
     name <- c.downField("name").as[String]
@@ -175,7 +181,7 @@ object Pet {
 
 When both Encoding and Decoding are required:
 
-```scala
+```scala 3
 final case class ModelName(
   field1: Type1,
   field2: Type2,
@@ -207,7 +213,7 @@ object ModelName {
 
 **Template: Enums**
 
-```scala
+```scala 3
 enum Status {
   case Active, Inactive, Pending
 }
@@ -247,7 +253,7 @@ For sealed traits hierarchies, use the following guidelines:
 
 **Template: Encoding and Decoding AST with discriminator**
 
-```scala
+```scala 3
 sealed trait Hierarchy
 final case class ChildTypeA(field1: String, field2: String)       extends Hierarchy
 final case class ChildTypeB(fieldA: Int, fieldB: String)          extends Hierarchy
@@ -319,7 +325,7 @@ object Hierarchy {
 
 **Template: Decoding without discriminator**
 
-```scala
+```scala 3
 // In case where there is no discriminator field, we can use a combined encoder/decoder that tries each encoder in turn until one succeeds (or all fail).
 // This is subpar, and if you're in this situation, optimize so the most likely decoder is first in the list.
 given hierarchyDecoder: Decoder[Hierarchy] = 
@@ -348,7 +354,7 @@ given hierarchyDecoder: Decoder[Hierarchy] =
 
 ### ❌ Automatic Derivation
 
-```scala
+```scala 3
 // Never use these imports
 import io.circe.generic.auto.*
 import io.circe.semiauto.*
@@ -360,7 +366,7 @@ deriveDecoder[Pet]
 
 ### ❌ ForProductN Helpers
 
-```scala
+```scala 3
 // Avoid - vulnerable to field reordering, and less readable as argument count goes up
 Encoder.forProduct3("name", "age", "owner")(p => (p.name, p.age, p.owner))
 Decoder.forProduct3("name", "age", "owner")(Pet.apply)
@@ -368,7 +374,7 @@ Decoder.forProduct3("name", "age", "owner")(Pet.apply)
 
 ### ❌ Map-based Construction
 
-```scala
+```scala 3
 // Avoid - loses type safety
 Encoder.instance[Pet] { pet =>
   Json.fromFields(Map(
@@ -382,7 +388,7 @@ Encoder.instance[Pet] { pet =>
 
 ### Custom JSON Field Names
 
-```scala
+```scala 3
 final case class User(firstName: String, lastName: String)
 
 object User {
@@ -403,7 +409,7 @@ object User {
 
 ### Optional Fields
 
-```scala
+```scala 3
 final case class Product(
   name: String, 
   description: Option[String]
@@ -427,7 +433,7 @@ object Product {
 
 ### Collections
 
-```scala
+```scala 3
 final case class Team(
   name: String, 
   members: List[Member]
@@ -456,13 +462,13 @@ Use chained `.downField` calls to navigate deep into the JSON structure.
 
 **Pattern for nested navigation:**
 
-```scala
+```scala 3
 c.downField("parent").downField("child1").downField("child2").as[Type]
 ```
 
 ### Example - API response with nested user data into flat structure
 
-```scala
+```scala 3
 // Target JSON structure:
 // {
 //   "user": {
@@ -528,7 +534,7 @@ Use `.emap` to add validation logic or transform decoded values with potential f
 
 #### Pattern:
 
-```scala
+```scala 3
 given decoder: Decoder[Type] = 
   Decoder[RawType].emap(rawValue => 
     // validation/transformation logic that returns Either[String, Type]
@@ -537,7 +543,7 @@ given decoder: Decoder[Type] =
 
 #### Examples:
 
-```scala
+```scala 3
 final case class PositiveInt(value: Int)
 
 object PositiveInt {
@@ -557,14 +563,14 @@ Use .contramap to transform a value before encoding, leveraging existing encoder
 
 #### Pattern:
 
-```scala
+```scala 3
 given encoder: Encoder[Type] = 
   Encoder[BaseType].contramap[Type](_.extractBaseValue)
 ```
 
 #### Example:
 
-```scala
+```scala 3
 final case class UserId(value: Long)
 
 object UserId {
@@ -589,7 +595,7 @@ object Temperature {
 
 ### Full example with validation and transformation
 
-```scala
+```scala 3
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
