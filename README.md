@@ -1,8 +1,10 @@
-# An Opinionated Guide to writing production grade applications in Scala
+# Battle-tested patterns for Scala with Cats Effects
 
 A battle-tested, opinionated Styleguide for effective, safe, scalable Scala Cats Effect applications, prioritizing
 legibility and
 being welcoming to developers of different backgrounds and experience levels as your app(s) grow.
+
+This advice is *particularly* well tailored to the following use cases:
 
 ## Why
 
@@ -10,18 +12,18 @@ Scala is a flexible langauge that has seen a lot of progress in the last few yea
 the Cats Effect/Typelevel ecosystem.
 Not enough space is being used to document the best practices for writing applications in Scala, and this **is** a
 problem,
-because it makes it hard for newcomers to learn what 'good' looks like, and it makes it easy for people to get a
-wrong perception about the actual difficulty curve of Cats Effect and Typelevel libraries.
+because it makes it hard for newcomers to learn what non-library code looks like, and it makes it easy for people to get a
+wrong perception about the actual difficulty curve of Cats Effect and Typelevel libraries, which I will try and explain in
+terms of applied examples.
 
 This repo is my attempt to document the best practices I've found in my work.
 
 ⚠️ This is a work in progress ⚠️
 
-* This is ONE WAY to write legible services; others exist. What I advocate here is a solid start;
-  no rules are without exceptions. I encourage you to try it out on your next project, and then consider
-  the advice I have here - you can then make an active choice to break away from something. Ultimately,
+> This is ONE WAY to write legible services; others for sure exist! What I advocate here is a **solid start**;
+  no rules are without exceptions. I encourage you to try it out on your next project - you can then make an active choice to break away from something. Ultimately,
   I don't believe programming should be a matter of dogma, but one of craftsmanship, and craftmanship
-  is a skill acquired through deliberate practice and personal appreciation of what works and what doesn't - for *you*.
+  is a skill acquired through deliberate practice and personal subjective appreciation and understanding of tradeoffs made. No perfect line of code exist that we can all agree on.
 
 ## Where is this advice coming from?
 
@@ -55,9 +57,10 @@ encountering your code to go "oh, of course that's what it does".
 
 ## Can I contribute?
 
-You can certainly raise an issue if you have a question, or a suggestion for improvement - however, I am unlikely to
-accept pull requests, since this repo is (at this moment in time) meant to be a reflection of **my** personal opinion,
+You can certainly raise an issue if you have a question or a suggestion for improvement - however, I am unlikely to
+accept pull requests changing the nature of the advice unless I'm personally convinced,
+since this repo is (at this moment in time) meant to be a reflection of **my** personal opinion,
 and coding patterns that I find appealing. I encourage you to fork this repo, or write your own styleguide, and share it
-with the world. We need more app developers to learn from each other. I hope that this repo will help.
+with the world. We need more app developers to learn from each other. I hope that this repo will help someone learn to love Scala!
 
 
