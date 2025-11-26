@@ -243,7 +243,7 @@ object Status {
 For sealed traits hierarchies, use the following guidelines:
 
 * Define `sealed trait` with all possible cases
-* Define case object only for the sealed trait "root"
+* Define companion object only for the sealed trait "root"
 * Define a private encoder and/or decoder (if required) for each case class in the case object for the sealed trait
 * Define a public encoder and/or decoder (if required) for sealed trait that utilize the private encoders/decoders.
 * If there already exists a discriminator field in the domain model, that can be utilized, otherwise, add a new field "
