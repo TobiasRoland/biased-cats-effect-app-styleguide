@@ -2,7 +2,7 @@
 
 A battle-tested, opinionated Styleguide for effective, safe, scalable Scala Cats Effect applications, prioritizing
 legibility and
-being welcoming to developers of different backgrounds and experience levels as your app(s) grow.
+being welcoming to developers of different backgrounds and experience levels as your app(s) and microservice mesh grows.
 
 ## Why
 
