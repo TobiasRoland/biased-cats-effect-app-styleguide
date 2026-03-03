@@ -37,7 +37,7 @@ focused around open source libraries, theoretical underpinnings of FP, rather th
 write applications. This is interesting, and I love this kind of content. However, I am not an open source maintainer,
 and I am not a language contributor. What I am, though,
 is a developer who has progressed from mid level, through senior, and into a tech lead role within the
-Scala space. At this p I have worked on a **lot** of Scala applications, with a **lot** of scala developers. I'm familiar with
+Scala space. At this point, I have worked on a **lot** of Scala applications, with a **lot** of scala developers. I'm familiar with
 working with
 services that count interactions in millions and billions, in a highly concurrent environment, scaling, ETL, Kafka,
 redis, database tech... a lot of stuff, all centered around the connective tissue of Cats Effect and Scala.
@@ -50,7 +50,7 @@ an infallable expert"
 but rather as a "I have seen, written and discussed code with a series of excellent people around me, and I would like
 to pay some of my learnings forward".
 
-## Core philisophy
+## Core philosophy
 
 I am obsessed with reducing cognitive load for myself and for readers of my code, and I think
 it's what makes for a long-lived service.
