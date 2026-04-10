@@ -29,6 +29,9 @@ with Scala and Cats Effect.
 > I don't believe programming should be a matter of dogma, but one of craftsmanship, and craftmanship
 > is a skill acquired through deliberate practice and personal subjective appreciation and understanding of tradeoffs
 > made. No perfect line of code exist that we can all agree on.
+>
+> The styledocs themselves are very explicit with prescriptive DOs and DON'Ts because they prescribe the dogma that I
+> prefer to work within; a self-imposed restriction that is internally consistent throughout the docs.
 
 ## Where is this advice coming from?
 
